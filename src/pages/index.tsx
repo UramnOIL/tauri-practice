@@ -11,34 +11,23 @@ interface Image {
   url: string
 }
 
-interface LatestPing {
-  server_id: number
-  is_running: number
-  millisecond?: number
-  protocol?: number
-  version?: string
-  current_player?: number
-  max_player?: number
-  created_at: number
-}
-
 interface Server {
   id: number
   user_id: number
   name: string
-  address: string
-  port: number
+  address?: string
+  port?: number
   description?: string
   color?: string
   categories: number[]
   web_sites: string[]
   top_image_id?: string
   back_image_id?: string
-  is_verified: number
-  is_archived: number
-  is_display_server: number
-  is_display_address: number
-  is_display_statistics: number
+  is_verified: boolean
+  is_archived: boolean
+  is_display_server: boolean
+  is_display_address: boolean
+  is_display_statistics: boolean
   created_at: number
   updated_at: number
   user: {
@@ -51,7 +40,16 @@ interface Server {
   }
   top_image: Image
   back_image: Image
-  latest_ping: LatestPing
+  latest_ping: {
+    server_id: number
+    is_running: boolean
+    millisecond?: number
+    protocol?: number
+    version?: string
+    current_player?: number
+    max_player?: number
+    created_at: number
+  }
   yesterday_statistics: {
     date: string
     type: number
@@ -86,6 +84,8 @@ const IndexPage: NextPage = () => {
     if (response !== undefined) {
       setServers(response.servers)
     }
+
+    window.alert('Succeeded!')
   }
 
   const [servers, setServers] = useState<Server[]>([])
@@ -101,9 +101,9 @@ const IndexPage: NextPage = () => {
         >
           送信
         </Button>
-        {servers.forEach((server) => {
-          ;<P>server.name</P>
-        })}
+        {servers.map((server) => (
+          <P key={server.id}>{server.name}</P>
+        ))}
         <ErrorMsg>{errorMessage}</ErrorMsg>
       </Container>
     </Wrapper>
